@@ -15,6 +15,16 @@ from dotenv import load_dotenv
 load_dotenv("config.env")
 import os
 
+
+NLTK_DIR = "/opt/render/nltk_data"
+os.makedirs(NLTK_DIR, exist_ok=True)
+
+nltk.data.path.append(NLTK_DIR)
+
+nltk.download("wordnet", download_dir=NLTK_DIR)
+nltk.download("omw-1.4", download_dir=NLTK_DIR)
+nltk.download("punkt", download_dir=NLTK_DIR)
+
 PORT = os.getenv("FLASK_PORT")
 FRONTEND_URL = os.getenv("FRONTEND_URL")
 BACKEND_URL = os.getenv("BACKEND_URL")
