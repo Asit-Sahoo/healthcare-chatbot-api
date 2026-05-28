@@ -1,1 +1,16 @@
-{"users": []}
+{
+    "users": [
+        {
+            "Name": "asit",
+            "Age": 22,
+            "Gender": "male",
+            "Disease": "AIDS",
+            "Sympts": [
+                "high_fever",
+                "high_fever",
+                "patches_in_throat",
+                "extra_marital_contacts"
+            ]
+        }
+    ]
+}
