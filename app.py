@@ -14,7 +14,7 @@ from dotenv import load_dotenv
 
 load_dotenv("config.env")
 import os
-
+import nltk
 
 NLTK_DIR = "/opt/render/nltk_data"
 os.makedirs(NLTK_DIR, exist_ok=True)
