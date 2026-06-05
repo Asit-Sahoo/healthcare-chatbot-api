@@ -7,42 +7,29 @@ import itertools
 from spacy.lang.en.stop_words import STOP_WORDS
 import spacy
 import joblib
-from flask import Flask, render_template, request, session
-from flask_cors import CORS  # Import CORS
-import secrets
+from flask import Flask, request, session
+from flask_cors import CORS
 from dotenv import load_dotenv
+from werkzeug.middleware.proxy_fix import ProxyFix
+import os
 
 load_dotenv("config.env")
-import os
-# import nltk
-
-# NLTK_DIR = "/opt/render/nltk_data"
-# os.makedirs(NLTK_DIR, exist_ok=True)
-
-# nltk.data.path.append(NLTK_DIR)
-
-# nltk.download("wordnet", download_dir=NLTK_DIR)
-# nltk.download("omw-1.4", download_dir=NLTK_DIR)
-# nltk.download("punkt", download_dir=NLTK_DIR)
 
 PORT = os.getenv("FLASK_PORT")
-FRONTEND_URL = os.getenv("FRONTEND_URL")
 BACKEND_URL = os.getenv("BACKEND_URL")
 
 app = Flask(__name__)
-# CORS(app,origins="http://localhost:5000",supports_credentials=True) 
+
+app.config['SECRET_KEY'] = os.getenv("SECRET_KEY")
+
+app.wsgi_app = ProxyFix(app.wsgi_app, x_proto=1, x_host=1)
 
 CORS(
     app,
-    origins=[
-        os.getenv("FRONTEND_URL"),
-        os.getenv("BACKEND_URL")
-    ],
+    origins=[BACKEND_URL],
     supports_credentials=True
 )
 
-
-app.secret_key = secrets.token_hex(16) 
 nlp = spacy.load('en_core_web_sm')
 
 # save data
@@ -677,12 +664,8 @@ def get_bot_response():
     
 
 if __name__ == "__main__":
-    import random  # define the random module
-    import string
-
-    S = 10  # number of characters in the string.
-    # call random.choices() string module to find the string in Uppercase + numeric data.
-    ran = ''.join(random.choices(string.ascii_uppercase + string.digits, k=S))
-    # chat_sp()
-    app.secret_key = str(ran)
-    app.run(port=int(PORT), debug=True)
+    app.run(
+        host="0.0.0.0",
+        port=int(PORT),
+        debug=True
+    )
